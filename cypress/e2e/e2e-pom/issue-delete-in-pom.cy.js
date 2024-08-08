@@ -1,25 +1,47 @@
 /**
- * This is an example file and approach for POM in Cypress
- */
-import IssueModal from "../../pages/IssueModal";
+ /* This is an example file and approach for POM in Cypress.
+ Add following method to IssueModal.js file
 
-describe('Issue delete', () => {
-  beforeEach(() => {
-    cy.visit('/');
-    cy.url().should('eq', `${Cypress.env('baseUrl')}project/board`).then((url) => {
-    //open issue detail modal with title from line 16  
-    cy.contains(issueTitle).click();
+ * validateNrOfIssues(amountOfIssues) {
+    cy.get('[data-testid="board-list:backlog"]').within(() => {
+      cy.get('[data-testid="list-issue"]').should(
+        "have.length",
+        amountOfIssues
+      );
     });
+ */
+
+import IssueModal from "../../pages/IssueModal";
+const issueTitle = "This is an issue of type: Task.";
+const expectedAmountofIssuesDlt = 3;
+const expectedAmountofIssuesCncl = 4;
+let isVisible = true;
+
+describe("Issue delete", () => {
+  beforeEach(() => {
+    cy.visit("/");
+    cy.url()
+      .should("eq", `${Cypress.env("baseUrl")}project/board`)
+      .then((url) => {
+        //open issue detail modal with title from line 16
+        cy.contains(issueTitle).click();
+      });
   });
 
-  //issue title, that we are testing with, saved into variable
-  const issueTitle = 'This is an issue of type: Task.';
-
-  it('Should delete issue successfully', () => {
-    //add steps to delete issue
+  //Test case 1
+  it("Should delete issue successfully", () => {
+    IssueModal.clickDeleteButton();
+    IssueModal.confirmDeletion();
+    IssueModal.validateIssueVisibilityState(issueTitle, !isVisible);
+    IssueModal.validateNrOfIssues(expectedAmountofIssuesDlt);
   });
 
-  it('Should cancel deletion process successfully', () => {
-    //add steps to start deletion proces but cancel it
+  //Test case 2
+  it("Should cancel deletion process successfully", () => {
+    IssueModal.clickDeleteButton();
+    IssueModal.cancelDeletion();
+    IssueModal.closeDetailModal();
+    IssueModal.ensureIssueIsVisibleOnBoard(issueTitle, isVisible);
+    IssueModal.validateNrOfIssues(expectedAmountofIssuesCncl);
   });
 });

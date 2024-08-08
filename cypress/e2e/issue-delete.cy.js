@@ -13,9 +13,8 @@ describe("Issue Deletion+Cancellation Tests", () => {
       });
   });
 
+  //Test case 1
   it("Should delete an issue and validate it is no longer visible", () => {
-    const initialIssueCount = 4;
-
     cy.get('[data-testid="modal:issue-details"]').should("be.visible");
     cy.get('[data-testid="icon:trash"]')
       .should("be.visible")
@@ -42,9 +41,8 @@ describe("Issue Deletion+Cancellation Tests", () => {
       });
   });
 
+  //Test case 2
   it("Should cancel the issue deletion and validate it is still visible", () => {
-    const initialIssueCount = 4;
-
     cy.get('[data-testid="modal:issue-details"]').should("be.visible");
     cy.get('[data-testid="icon:trash"]').click();
     cy.get('[data-testid="modal:confirm"]').should("be.visible");
